@@ -14,10 +14,10 @@ struct symbol {
 struct symbol symbols[255];
 
 int my_func(FILE *fp) {
-	// tableData(fp);
-	// frequency(fp);
-	// changeCharacter(fp);
-	numericalStatistics(fp);
+    tableData(fp);
+	frequency(fp);
+	changeCharacter(fp);
+	//numericalStatistics(fp);
 	if (fclose(fp)==0)
 	{
 		printf("File closed... exiting");
@@ -25,6 +25,7 @@ int my_func(FILE *fp) {
 }
 
 void numericalStatistics(FILE *fp) {
+    rewind(fp);
 	char c;
 	char numbers[BUFFER];
 	int num_arr_pos = 0;
@@ -47,13 +48,14 @@ void numericalStatistics(FILE *fp) {
 			}
 		}
 	}
-	
+
 }
 
 void changeCharacter(FILE *fp) {
+    rewind(fp);
 	int pos = 0;
 	char c, swap1, swap2;
-	char new_file_data[BUFFER];
+	char new_file_data[BUFFER] = {};
 	printf("Swap symbol:");
 	scanf(" %c", &swap1);
 	printf("With symbol:");
@@ -62,10 +64,11 @@ void changeCharacter(FILE *fp) {
 		if (c==swap1)
 		{
 			new_file_data[pos] = swap2;
+			pos++;
 		} else {
 			new_file_data[pos] = c;
+			pos++;
 		}
-		pos++;
 	}
 	FILE *fp1;
 	fp1 = fopen("output.txt", "w");
@@ -74,6 +77,7 @@ void changeCharacter(FILE *fp) {
 }
 
 void frequency(FILE *fp) {
+    rewind(fp);
 	char c, user_c;
 	int user_count = 0, all_count = 0;
 	float freq=0;
@@ -87,28 +91,29 @@ void frequency(FILE *fp) {
 		all_count++;
 	}
 	freq= (float)user_count/all_count*100.0;
-	printf("\nSearched symbol frequency: %.2f%c\n", freq, '%');
+	printf("\nSearched symbol frequency: %f%c\n", freq, '%');
 }
 
 void tableData(FILE *fp) {
 	char c;
-	for (int i = 0; i <= 255; i++)
+	int i;
+	for (i = 0; i <= 255; i++)
 	{
 		symbols[i].symb = (char)i;
 		symbols[i].pos = i;
 		symbols[i].count = 0;
 	}
 	while((c=fgetc(fp))!=EOF) {
-		for (int i = 0; i <= 255; i++)
+		for (i = 0; i <= 255; i++)
 		{
 			if (symbols[i].symb==c)
 			{
 				symbols[i].count++;
-			}	
+			}
 		}
 	}
 	printf("SYMBOL|ASCII_DEC|ASCII_HEX|COUNT\n");
-	for (int i = 0; i <= 255; i++)
+	for (i = 0; i <= 255; i++)
 	{
 		if (symbols[i].count != 0)
 		{
