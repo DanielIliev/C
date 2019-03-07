@@ -112,7 +112,7 @@ void numericalStatistics(FILE *fp) {
 					number[number_pos] = c;
 					number_pos++;
 				} else {
-					numbers[numbers_pos] = strtol(number, &p, 10);
+					numbers[numbers_pos] = strtol(number, &p, 10); //atoi(number)
 					numbers_pos++;
 					numbers_count ++;
 					memset(number, 0, sizeof(number));
