@@ -14,10 +14,10 @@ struct symbol {
 struct symbol symbols[255];
 
 int my_func(FILE *fp) {
-    tableData(fp);
+    // tableData(fp);
 	frequency(fp);
-	changeCharacter(fp);
-	//numericalStatistics(fp);
+	// changeCharacter(fp);
+	// numericalStatistics(fp);
 	if (fclose(fp)==0)
 	{
 		printf("File closed... exiting");
@@ -65,14 +65,15 @@ void frequency(FILE *fp) {
 		}
 		all_count++;
 	}
-	freq= (float)user_count/all_count*100.0;
-	printf("\nSearched symbol frequency: %f%c\n", freq, '%');
+	/*freq= (float)(user_count/all_count*100.0);
+	printf("\nSearched symbol frequency: %f%c\n", freq, '%');*/
+	printf("%.2f%c\n", (user_count/all_count), '%');	
 }
 void changeCharacter(FILE *fp) {
     rewind(fp);
 	int pos = 0;
 	char c, swap1, swap2;
-	char new_file_data[BUFFER] = {};
+	char new_file_data[1000] = {};
 	printf("Swap symbol:");
 	scanf(" %c", &swap1);
 	printf("With symbol:");
@@ -95,26 +96,48 @@ void changeCharacter(FILE *fp) {
 void numericalStatistics(FILE *fp) {
     rewind(fp);
 	char c;
-	char numbers[BUFFER];
-	int num_arr_pos = 0;
+	char *p;
+	char number[30];
+	int numbers[100];
+	int numbers_pos = 0, number_pos = 0, numbers_count = 0;
 	while((c=fgetc(fp)) != EOF) {
 		if (c>='0' && c<='9')
 		{
-			numbers[num_arr_pos] = c;
-			num_arr_pos++;
+			number[number_pos] = c;
+			number_pos++;
 			while(1) {
 				c=fgetc(fp);
 				if (c>='0' && c<='9')
 				{
-					numbers[num_arr_pos] = c;
-					num_arr_pos++;
+					number[number_pos] = c;
+					number_pos++;
 				} else {
-					numbers[num_arr_pos] = ' ';
-					num_arr_pos++;
+					numbers[numbers_pos] = strtol(number, &p, 10);
+					numbers_pos++;
+					numbers_count ++;
+					memset(number, 0, sizeof(number));
+					number_pos = 0;
 					break;
 				}
 			}
 		}
 	}
+
+	int max = 0, min = numbers[0], sum = 0;
+	for (int i = 0; i < numbers_count; i++)
+	{
+		if (max < numbers[i])
+		{
+			max = numbers[i];
+		} else if (min > numbers[i]) {
+			min = numbers[i];
+		}
+		if (sum < INT_MAX)
+		{
+			sum+=numbers[i];
+		}
+	}
+	printf("max: %d, min: %d\n", max, min);
+	printf("Avg: %d\n", sum/numbers_count);
 
 }
