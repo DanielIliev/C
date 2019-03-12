@@ -14,10 +14,10 @@ struct symbol {
 struct symbol symbols[255];
 
 int my_func(FILE *fp) {
-    // tableData(fp);
+    /*tableData(fp);
 	frequency(fp);
-	// changeCharacter(fp);
-	// numericalStatistics(fp);
+	changeCharacter(fp);*/
+	numericalStatistics(fp);
 	if (fclose(fp)==0)
 	{
 		printf("File closed... exiting");
@@ -51,6 +51,7 @@ void tableData(FILE *fp) {
 		}
 	}
 }
+
 void frequency(FILE *fp) {
     rewind(fp);
 	char c, user_c;
@@ -65,42 +66,63 @@ void frequency(FILE *fp) {
 		}
 		all_count++;
 	}
-	/*freq= (float)(user_count/all_count*100.0);
-	printf("\nSearched symbol frequency: %f%c\n", freq, '%');*/
-	printf("%.2f%c\n", (user_count/all_count), '%');	
+	printf("%.2f%%", (float)user_count/all_count*100.0);
 }
+
 void changeCharacter(FILE *fp) {
     rewind(fp);
-	int pos = 0;
+	int pos = 0, buffer = 100;
 	char c, swap1, swap2;
-	char new_file_data[1000] = {};
+	char *newdata;
+	newdata = (char *) calloc(buffer, sizeof(char));
+	if (newdata==NULL)
+	{
+		printf("Memory allocation in changeCharacter failed");
+	}
 	printf("Swap symbol:");
 	scanf(" %c", &swap1);
 	printf("With symbol:");
 	scanf(" %c", &swap2);
 	while((c=fgetc(fp)) != EOF) {
-		if (c==swap1)
+		if (pos==buffer)
 		{
-			new_file_data[pos] = swap2;
-			pos++;
-		} else {
-			new_file_data[pos] = c;
-			pos++;
+			buffer+=50;
+			newdata = (void*) realloc(newdata, buffer*sizeof(char));
+		}
+		newdata[pos] = c;
+		pos++;
+	}
+	for (int i = 0; i < pos; i++)
+	{
+		if (newdata[i]==swap1)
+		{
+			newdata[i]=swap2;
 		}
 	}
 	FILE *fp1;
 	fp1 = fopen("output.txt", "w");
-	fprintf(fp1, "%s", new_file_data);
+	fprintf(fp1, "%s", newdata);
 	fclose(fp1);
+	free(newdata);
 }
+
 void numericalStatistics(FILE *fp) {
     rewind(fp);
 	char c;
-	char *p;
-	char number[30];
-	int numbers[100];
-	int numbers_pos = 0, number_pos = 0, numbers_count = 0;
+	char number[15];
+	int *numbers;
+	int numbers_pos = 0, number_pos = 0, buffer = 10;
+	numbers = (int *) calloc(buffer, sizeof(int));
+	if (numbers==NULL)
+	{
+		printf("Memory allocation in numericalStatistics failed");
+	}
 	while((c=fgetc(fp)) != EOF) {
+		if (numbers_pos==buffer)
+		{
+			buffer+=50;
+			numbers = (void *) realloc(numbers, buffer*sizeof(int));
+		}
 		if (c>='0' && c<='9')
 		{
 			number[number_pos] = c;
@@ -112,19 +134,28 @@ void numericalStatistics(FILE *fp) {
 					number[number_pos] = c;
 					number_pos++;
 				} else {
-					numbers[numbers_pos] = strtol(number, &p, 10);
+<<<<<<< HEAD
+					numbers[numbers_pos] = atoi(number);
+=======
+					numbers[numbers_pos] = strtol(number, &p, 10); //atoi(number)
+>>>>>>> fcdab287e8fe29ac2f66af060003b82ae3c857d7
 					numbers_pos++;
-					numbers_count ++;
-					memset(number, 0, sizeof(number));
 					number_pos = 0;
 					break;
 				}
 			}
 		}
 	}
-
-	int max = 0, min = numbers[0], sum = 0;
-	for (int i = 0; i < numbers_count; i++)
+/*
+	int max = 0, min = numbers[0], sum = 0, begin = 0, end = 0;
+	printf("Set interval start: ");
+	scanf("%15d", begin);
+	printf("Set interval end: ");
+	scanf("%15d", end);
+	printf("%d %d", begin, end);
+	FILE *interval;
+	interval = fopen("interval.txt", "w");
+	for (int i = 0; i < numbers_pos; i++)
 	{
 		if (max < numbers[i])
 		{
@@ -132,12 +163,22 @@ void numericalStatistics(FILE *fp) {
 		} else if (min > numbers[i]) {
 			min = numbers[i];
 		}
-		if (sum < INT_MAX)
-		{
+		if (sum>=INT_MAX) {
+			printf("Sum of elements exceeds integer max value, last value: %d\n", sum);
+			break;
+		} else {
 			sum+=numbers[i];
 		}
 	}
 	printf("max: %d, min: %d\n", max, min);
+<<<<<<< HEAD
+	printf("Avg: %d\n", sum/numbers_pos);
+	free(numbers);
+	fclose(interval);*/
+	free(numbers);
+}
+=======
 	printf("Avg: %d\n", sum/numbers_count);
 
 }
+>>>>>>> fcdab287e8fe29ac2f66af060003b82ae3c857d7
