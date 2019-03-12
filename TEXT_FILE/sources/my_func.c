@@ -134,11 +134,7 @@ void numericalStatistics(FILE *fp) {
 					number[number_pos] = c;
 					number_pos++;
 				} else {
-<<<<<<< HEAD
 					numbers[numbers_pos] = atoi(number);
-=======
-					numbers[numbers_pos] = strtol(number, &p, 10); //atoi(number)
->>>>>>> fcdab287e8fe29ac2f66af060003b82ae3c857d7
 					numbers_pos++;
 					number_pos = 0;
 					break;
@@ -171,14 +167,8 @@ void numericalStatistics(FILE *fp) {
 		}
 	}
 	printf("max: %d, min: %d\n", max, min);
-<<<<<<< HEAD
 	printf("Avg: %d\n", sum/numbers_pos);
 	free(numbers);
 	fclose(interval);*/
 	free(numbers);
 }
-=======
-	printf("Avg: %d\n", sum/numbers_count);
-
-}
->>>>>>> fcdab287e8fe29ac2f66af060003b82ae3c857d7
