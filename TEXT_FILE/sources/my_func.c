@@ -14,9 +14,9 @@ struct symbol {
 struct symbol symbols[255];
 
 int my_func(FILE *fp) {
-    /*tableData(fp);
+    tableData(fp);
 	frequency(fp);
-	changeCharacter(fp);*/
+	changeCharacter(fp);
 	numericalStatistics(fp);
 	if (fclose(fp)==0)
 	{
@@ -66,7 +66,7 @@ void frequency(FILE *fp) {
 		}
 		all_count++;
 	}
-	printf("%.2f%%", (float)user_count/all_count*100.0);
+	printf("%.2f%%\n", (float)user_count/all_count*100.0);
 }
 
 void changeCharacter(FILE *fp) {
@@ -111,7 +111,7 @@ void numericalStatistics(FILE *fp) {
 	char c;
 	char number[15];
 	int *numbers;
-	int numbers_pos = 0, number_pos = 0, buffer = 10;
+	int numbers_pos = 0, buffer = 50;
 	numbers = (int *) calloc(buffer, sizeof(int));
 	if (numbers==NULL)
 	{
@@ -122,35 +122,65 @@ void numericalStatistics(FILE *fp) {
 		{
 			buffer+=50;
 			numbers = (void *) realloc(numbers, buffer*sizeof(int));
-		}
-		if (c>='0' && c<='9')
-		{
-			number[number_pos] = c;
-			number_pos++;
-			while(1) {
+		} else {
+			if (c>='0' && c<='9')
+			{
+				number[0] = c;
+				for (int i = 1; i < 15; i++)
+				{
+					c=fgetc(fp);
+					if (c>='0' && c<='9')
+					{
+						number[i] = c;
+					} else {
+						numbers[numbers_pos] = atoi(number);
+						numbers_pos++;
+						break;
+					}
+				}
+			} else if (c=='-') {
+				number[0] = c;
 				c=fgetc(fp);
 				if (c>='0' && c<='9')
 				{
-					number[number_pos] = c;
-					number_pos++;
-				} else {
-					numbers[numbers_pos] = atoi(number);
-					numbers_pos++;
-					number_pos = 0;
-					break;
+					number[1] = c;
+					for (int i = 2; i < 15; i++)
+					{
+						c=fgetc(fp);
+						if (c>='0' && c<='9')
+						{
+							number[i] = c;
+						} else {
+							numbers[numbers_pos] = atoi(number);
+							numbers_pos++;
+							break;
+						}
+					}	
 				}
 			}
 		}
 	}
-/*
-	int max = 0, min = numbers[0], sum = 0, begin = 0, end = 0;
+	/*char interval_grab[16];
+	int begin, end;
 	printf("Set interval start: ");
-	scanf("%15d", begin);
+	scanf("%16s", &interval_grab);
+	begin = atoi(interval_grab);
 	printf("Set interval end: ");
-	scanf("%15d", end);
-	printf("%d %d", begin, end);
-	FILE *interval;
-	interval = fopen("interval.txt", "w");
+	scanf("%16s", &interval_grab);
+	end = atoi(interval_grab);*/
+	for (int i = 0; i < 10; i++)
+	{
+		printf("%d\n", numbers[i]);
+		/*if ((numbers[i] >= begin) && (numbers[i] <=end))
+		{
+			printf("%d", numbers[i]);
+		}*/
+	}
+	/*int max = 0, min = numbers[0], sum = 0, begin, end;
+	printf("Set interval start: ");
+	scanf("%d", begin);
+	printf("Set interval end: ");
+	scanf("%d", end);
 	for (int i = 0; i < numbers_pos; i++)
 	{
 		if (max < numbers[i])
@@ -167,8 +197,6 @@ void numericalStatistics(FILE *fp) {
 		}
 	}
 	printf("max: %d, min: %d\n", max, min);
-	printf("Avg: %d\n", sum/numbers_pos);
-	free(numbers);
-	fclose(interval);*/
+	printf("Avg: %d\n", sum/numbers_pos);*/
 	free(numbers);
 }
