@@ -1,4 +1,4 @@
-30Abc
-Asdf
+30abc
+asdf
 123
--50Abctoshkoesuper-100 300
+-50abctoshkoesuper-100 300

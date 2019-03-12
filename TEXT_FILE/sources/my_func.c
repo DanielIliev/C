@@ -172,21 +172,6 @@ void numericalStatistics(FILE *fp) {
 			}
 		}
 	}
-	char interval_grab[16];
-	int begin, end;
-	printf("Set interval start: ");
-	scanf("%16s", &interval_grab);
-	begin = atoi(interval_grab);
-	printf("Set interval end: ");
-	scanf("%16s", &interval_grab);
-	end = atoi(interval_grab);
-	for (int i = 0; i < mempos; i++)
-	{
-		if ((numbers[i] >= begin) && (numbers[i] <=end))
-		{
-			printf("%d\n", numbers[i]);
-		}
-	}
 	int max = 0, min = numbers[0], sum = 0;
 	for (int i = 0; i < mempos; i++)
 	{
@@ -205,5 +190,26 @@ void numericalStatistics(FILE *fp) {
 	}
 	printf("Max: %d, Min: %d\n", max, min);
 	printf("Avg: %d\n", sum/mempos);
+	FILE *interval;
+	interval = fopen("interval.txt", "w");
+	char interval_grab[16];
+	int begin, end, columns;
+	printf("Set interval start: ");
+	scanf("%16s", &interval_grab);
+	begin = atoi(interval_grab);
+	printf("Set interval end: ");
+	scanf("%16s", &interval_grab);
+	end = atoi(interval_grab);
+	printf("Set number of columns for the file: ");
+	scanf("%d", &columns);
+	int colpos = 1;
+	for (int i = 0; i < mempos; i++)
+	{
+		if ((numbers[i] >= begin) && (numbers[i] <=end))
+		{
+			sprintf(number, "%d", numbers[i]);
+			fprintf(interval, "%s\n", number);
+		}
+	}
 	free(numbers);
 }
