@@ -108,80 +108,87 @@ void changeCharacter(FILE *fp) {
 
 void numericalStatistics(FILE *fp) {
     rewind(fp);
-	char c;
-	char number[15];
 	int *numbers;
-	int numbers_pos = 0, buffer = 50;
+	int mempos = 0, buffer = 50;
 	numbers = (int *) calloc(buffer, sizeof(int));
 	if (numbers==NULL)
 	{
 		printf("Memory allocation in numericalStatistics failed");
 	}
+	char c;
+	char number[15];
+	int numpos=0;
 	while((c=fgetc(fp)) != EOF) {
-		if (numbers_pos==buffer)
+		if (mempos==buffer)
 		{
 			buffer+=50;
 			numbers = (void *) realloc(numbers, buffer*sizeof(int));
-		} else {
-			if (c>='0' && c<='9')
-			{
-				number[0] = c;
-				for (int i = 1; i < 15; i++)
-				{
-					c=fgetc(fp);
-					if (c>='0' && c<='9')
-					{
-						number[i] = c;
-					} else {
-						numbers[numbers_pos] = atoi(number);
-						numbers_pos++;
-						break;
-					}
-				}
-			} else if (c=='-') {
-				number[0] = c;
-				c=fgetc(fp);
+		}
+		if (c>='0' && c<='9')
+		{
+			number[numpos] = c;
+			numpos++;
+			c=fgetc(fp);
+			while(1) {
 				if (c>='0' && c<='9')
 				{
-					number[1] = c;
-					for (int i = 2; i < 15; i++)
+					number[numpos] = c;
+					numpos++;
+					c=fgetc(fp);
+				} else break;
+			}
+			numbers[mempos] = atoi(number);
+			mempos++;
+			numpos=0;
+			for (int i = 0; i < 15; i++)
+			{
+				number[i]=' ';
+			}
+		} else if(c=='-') {
+			c=fgetc(fp);
+			if (c>='0' && c<='9')
+			{
+				number[0] = '-';
+				numpos++;
+				number[numpos] = c;
+				numpos++;
+				c=fgetc(fp);
+				while(1) {
+					if (c>='0' && c<='9')
 					{
+						number[numpos] = c;
+						numpos++;
 						c=fgetc(fp);
-						if (c>='0' && c<='9')
-						{
-							number[i] = c;
-						} else {
-							numbers[numbers_pos] = atoi(number);
-							numbers_pos++;
-							break;
-						}
-					}	
+					} else if (numpos>=15) break;
+					else break;
+				}
+				numbers[mempos] = atoi(number);
+				mempos++;
+				numpos=0;
+				for (int i = 0; i < 15; i++)
+				{
+					number[i]=' ';
 				}
 			}
 		}
 	}
-	/*char interval_grab[16];
+	char interval_grab[16];
 	int begin, end;
 	printf("Set interval start: ");
 	scanf("%16s", &interval_grab);
 	begin = atoi(interval_grab);
 	printf("Set interval end: ");
 	scanf("%16s", &interval_grab);
-	end = atoi(interval_grab);*/
-	for (int i = 0; i < 10; i++)
+	end = atoi(interval_grab);
+	for (int i = 0; i < mempos; i++)
 	{
-		printf("%d\n", numbers[i]);
-		/*if ((numbers[i] >= begin) && (numbers[i] <=end))
+		if ((numbers[i] >= begin) && (numbers[i] <=end))
 		{
-			printf("%d", numbers[i]);
-		}*/
+			printf("%d\n", numbers[i]);
+		}
 	}
-	/*int max = 0, min = numbers[0], sum = 0, begin, end;
-	printf("Set interval start: ");
-	scanf("%d", begin);
-	printf("Set interval end: ");
-	scanf("%d", end);
-	for (int i = 0; i < numbers_pos; i++)
+	int max = 0, min = numbers[0], sum = 0;
+	for (int i = 0; i < mempos; i++)
 	{
 		if (max < numbers[i])
 		{
@@ -196,7 +203,7 @@ void numericalStatistics(FILE *fp) {
 			sum+=numbers[i];
 		}
 	}
-	printf("max: %d, min: %d\n", max, min);
-	printf("Avg: %d\n", sum/numbers_pos);*/
+	printf("Max: %d, Min: %d\n", max, min);
+	printf("Avg: %d\n", sum/mempos);
 	free(numbers);
 }
