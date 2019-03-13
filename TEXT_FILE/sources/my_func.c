@@ -14,9 +14,9 @@ struct symbol {
 struct symbol symbols[255];
 
 int my_func(FILE *fp) {
-    tableData(fp);
-	frequency(fp);
-	changeCharacter(fp);
+    // tableData(fp);
+	// frequency(fp);
+	// changeCharacter(fp);
 	numericalStatistics(fp);
 	if (fclose(fp)==0)
 	{
@@ -202,13 +202,19 @@ void numericalStatistics(FILE *fp) {
 	end = atoi(interval_grab);
 	printf("Set number of columns for the file: ");
 	scanf("%d", &columns);
-	int colpos = 1;
+	int  step = 1;
 	for (int i = 0; i < mempos; i++)
 	{
 		if ((numbers[i] >= begin) && (numbers[i] <=end))
 		{
 			sprintf(number, "%d", numbers[i]);
-			fprintf(interval, "%s\n", number);
+			if (step>=columns)
+			{
+				fprintf(interval, "%s\n", number);
+				step = 1;
+			}
+			fprintf(interval, "%s ", number);
+			step++;
 		}
 	}
 	free(numbers);
