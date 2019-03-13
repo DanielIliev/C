@@ -118,6 +118,8 @@ void numericalStatistics(FILE *fp) {
 	char c;
 	char number[15];
 	int numpos=0;
+	FILE *negatives;
+	negatives = fopen("negatives.txt", "w");
 	while((c=fgetc(fp)) != EOF) {
 		if (mempos==buffer)
 		{
@@ -165,6 +167,7 @@ void numericalStatistics(FILE *fp) {
 				numbers[mempos] = atoi(number);
 				mempos++;
 				numpos=0;
+				fprintf(negatives, "%c ", '0');
 				for (int i = 0; i < 15; i++)
 				{
 					number[i]=' ';
@@ -172,6 +175,7 @@ void numericalStatistics(FILE *fp) {
 			}
 		}
 	}
+	fclose(negatives);
 	int max = 0, min = numbers[0], sum = 0;
 	for (int i = 0; i < mempos; i++)
 	{
@@ -217,5 +221,7 @@ void numericalStatistics(FILE *fp) {
 			step++;
 		}
 	}
+	// When you see a negative write it in a file as 0
+	fclose(interval);
 	free(numbers);
 }
