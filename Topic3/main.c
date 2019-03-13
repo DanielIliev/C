@@ -11,7 +11,11 @@ void numericalStatistics(FILE *fp);
 int main() {
 	FILE *fp;
 	fp = menu();
-	fclose(fp);
+	numericalStatistics(fp);
+	if (fclose(fp)==0)
+	{
+		printf("File closed... exiting");
+	}
 	return 0;
 }
 
@@ -68,8 +72,6 @@ void numericalStatistics(FILE *fp) {
 	char c;
 	char number[15];
 	int numpos=0;
-	FILE *negatives;
-	negatives = fopen("negatives.txt", "w");
 	while((c=fgetc(fp)) != EOF) {
 		if (mempos==buffer)
 		{
@@ -117,7 +119,6 @@ void numericalStatistics(FILE *fp) {
 				numbers[mempos] = atoi(number);
 				mempos++;
 				numpos=0;
-				fprintf(negatives, "%c ", '0');
 				for (int i = 0; i < 15; i++)
 				{
 					number[i]=' ';
@@ -125,53 +126,35 @@ void numericalStatistics(FILE *fp) {
 			}
 		}
 	}
-	fclose(negatives);
 	int max = 0, min = numbers[0], sum = 0;
 	for (int i = 0; i < mempos; i++)
 	{
+		printf("Element%d: %d\n", i+1, numbers[i]);
 		if (max < numbers[i])
 		{
 			max = numbers[i];
 		} else if (min > numbers[i]) {
 			min = numbers[i];
 		}
-		if (sum>=INT_MAX) {
-			printf("Sum of elements exceeds integer max value, last value: %d\n", sum);
-			break;
-		} else {
-			sum+=numbers[i];
-		}
+		sum+=numbers[i];
 	}
-	printf("Max: %d, Min: %d\n", max, min);
-	printf("Avg: %d\n", sum/mempos);
-	FILE *interval;
-	interval = fopen("interval.txt", "w");
+	printf("Max: %d, Min: %d\nSum: %d, Avg:%d\n", max, min, sum, sum/mempos+1);
+	sum=0;
 	char interval_grab[16];
-	int begin, end, columns;
+	int begin, end;
 	printf("Set interval start: ");
 	scanf("%16s", &interval_grab);
 	begin = atoi(interval_grab);
 	printf("Set interval end: ");
 	scanf("%16s", &interval_grab);
 	end = atoi(interval_grab);
-	printf("Set number of columns for the file: ");
-	scanf("%d", &columns);
-	int  step = 1;
 	for (int i = 0; i < mempos; i++)
 	{
 		if ((numbers[i] >= begin) && (numbers[i] <=end))
 		{
-			sprintf(number, "%d", numbers[i]);
-			if (step>=columns)
-			{
-				fprintf(interval, "%s\n", number);
-				step = 1;
-			}
-			fprintf(interval, "%s ", number);
-			step++;
+			sum+=numbers[i];
 		}
 	}
-	// When you see a negative write it in a file as 0
-	fclose(interval);
+	printf("Interval sum: %d\n", sum);
 	free(numbers);
 }

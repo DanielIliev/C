@@ -193,7 +193,7 @@ void numericalStatistics(FILE *fp) {
 		}
 	}
 	printf("Max: %d, Min: %d\n", max, min);
-	printf("Avg: %d\n", sum/mempos);
+	printf("Avg: %d\n", sum/mempos+1);
 	FILE *interval;
 	interval = fopen("interval.txt", "w");
 	char interval_grab[16];
