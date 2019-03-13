@@ -1,109 +1,59 @@
-#include "my_func.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <dirent.h>
 
-void tableData(FILE *fp);
-void frequency(FILE *fp);
-void changeCharacter(FILE *fp);
+FILE *menu();
+void readDirectory();
+FILE *readFile();
+
 void numericalStatistics(FILE *fp);
 
-struct symbol {
-	char symb;
-	int pos;
-	int count;
-};
-
-struct symbol symbols[255];
-
-int my_func(FILE *fp) {
-    tableData(fp);
-	frequency(fp);
-	changeCharacter(fp);
-	numericalStatistics(fp);
-	if (fclose(fp)==0)
-	{
-		printf("File closed... exiting");
-	}
+int main() {
+	FILE *fp;
+	fp = menu();
+	fclose(fp);
+	return 0;
 }
 
-void tableData(FILE *fp) {
-	char c;
-	int i;
-	for (i = 0; i <= 255; i++)
+
+FILE *menu() {
+	system("cls");
+	printf("Menu items\n");
+	readDirectory();
+	FILE *fp = readFile();
+	return fp;
+}
+void readDirectory() {
+	DIR *d;
+	struct dirent *dir;
+	if ((d=opendir("."))!=NULL)
 	{
-		symbols[i].symb = (char)i;
-		symbols[i].pos = i;
-		symbols[i].count = 0;
-	}
-	while((c=fgetc(fp))!=EOF) {
-		for (i = 0; i <= 255; i++)
-		{
-			if (symbols[i].symb==c)
+		while ((dir=readdir(d)) != NULL) {
+			if (strcmp(dir->d_name, "..") > 0)
 			{
-				symbols[i].count++;
+				printf("%s\n", dir->d_name);
 			}
 		}
 	}
-	printf("SYMBOL|ASCII_DEC|ASCII_HEX|COUNT\n");
-	for (i = 0; i <= 255; i++)
-	{
-		if (symbols[i].count != 0)
-		{
-			printf("%c\t%d\t%x\t%d\n", symbols[i].symb, symbols[i].pos, symbols[i].pos, symbols[i].count);
-		}
-	}
+	closedir(d);
 }
-
-void frequency(FILE *fp) {
-    rewind(fp);
-	char c, user_c;
-	int user_count = 0, all_count = 0;
-	float freq=0;
-	printf("Input searched symbol:");
-	scanf(" %c", &user_c);
-	while((c=fgetc(fp)) != EOF) {
-		if (c==user_c)
+FILE *readFile() {
+	FILE *fp;
+	char user_file[255];
+	int opened = 0;
+	while(opened==0) {
+		printf("Input the file name (as seen on screen):");
+		scanf("%255s", user_file);
+		if ((fp=fopen(user_file, "r")) != NULL)
 		{
-			user_count++;
-		}
-		all_count++;
-	}
-	printf("%.2f%%\n", (float)user_count/all_count*100.0);
-}
-
-void changeCharacter(FILE *fp) {
-    rewind(fp);
-	int pos = 0, buffer = 100;
-	char c, swap1, swap2;
-	char *newdata;
-	newdata = (char *) calloc(buffer, sizeof(char));
-	if (newdata==NULL)
-	{
-		printf("Memory allocation in changeCharacter failed");
-	}
-	printf("Swap symbol:");
-	scanf(" %c", &swap1);
-	printf("With symbol:");
-	scanf(" %c", &swap2);
-	while((c=fgetc(fp)) != EOF) {
-		if (pos==buffer)
-		{
-			buffer+=50;
-			newdata = (void*) realloc(newdata, buffer*sizeof(char));
-		}
-		newdata[pos] = c;
-		pos++;
-	}
-	for (int i = 0; i < pos; i++)
-	{
-		if (newdata[i]==swap1)
-		{
-			newdata[i]=swap2;
+			printf("File opened\n");
+			opened=1;
+		} else {
+			printf("Bad name, please try again\n");
+			continue;
 		}
 	}
-	FILE *fp1;
-	fp1 = fopen("output.txt", "w");
-	fprintf(fp1, "%s", newdata);
-	fclose(fp1);
-	free(newdata);
+	return fp;
 }
 
 void numericalStatistics(FILE *fp) {
@@ -221,6 +171,7 @@ void numericalStatistics(FILE *fp) {
 			step++;
 		}
 	}
+	// When you see a negative write it in a file as 0
 	fclose(interval);
 	free(numbers);
 }
