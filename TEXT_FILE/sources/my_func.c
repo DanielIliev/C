@@ -14,9 +14,9 @@ struct symbol {
 struct symbol symbols[255];
 
 int my_func(FILE *fp) {
-    // tableData(fp);
-	// frequency(fp);
-	// changeCharacter(fp);
+    tableData(fp);
+	frequency(fp);
+	changeCharacter(fp);
 	numericalStatistics(fp);
 	if (fclose(fp)==0)
 	{
