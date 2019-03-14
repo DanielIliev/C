@@ -141,7 +141,7 @@ void numericalStatistics(FILE *fp) {
 	printf("Max: %d, Min: %d\nSum: %d, Avg:%d\n", max, min, sum, sum/mempos+1);
 	sum=0;
 	char interval_grab[16];
-	int begin, end;
+	int begin, end, count = 0;
 	printf("Set interval start: ");
 	scanf("%16s", &interval_grab);
 	begin = atoi(interval_grab);
@@ -152,9 +152,10 @@ void numericalStatistics(FILE *fp) {
 	{
 		if ((numbers[i] >= begin) && (numbers[i] <=end))
 		{
+			count++;
 			sum+=numbers[i];
 		}
 	}
-	printf("Interval sum: %d\n", sum);
+	printf("Interval elem count: %d, Interval sum: %d\n", count, sum);
 	free(numbers);
 }
