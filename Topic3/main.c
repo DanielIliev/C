@@ -6,6 +6,7 @@ FILE *menu();
 void readDirectory();
 FILE *readFile();
 
+int cmp(const void*a, const void*b);
 void numericalStatistics(FILE *fp);
 
 int main() {
@@ -63,7 +64,7 @@ FILE *readFile() {
 void numericalStatistics(FILE *fp) {
     rewind(fp);
 	int *numbers;
-	int mempos = 0, buffer = 50;
+	int mempos = 0, buffer = 50, i;
 	numbers = (int *) calloc(buffer, sizeof(int));
 	if (numbers==NULL)
 	{
@@ -127,7 +128,7 @@ void numericalStatistics(FILE *fp) {
 		}
 	}
 	int max = 0, min = numbers[0], sum = 0;
-	for (int i = 0; i < mempos; i++)
+	for (i = 0; i < mempos; i++)
 	{
 		printf("Element%d: %d\n", i+1, numbers[i]);
 		if (max < numbers[i])
