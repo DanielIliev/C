@@ -15,7 +15,7 @@ int main() {
 	numericalStatistics(fp);
 	if (fclose(fp)==0)
 	{
-		printf("File closed... exiting");
+		printf("\nFile closed... exiting");
 	}
 	return 0;
 }
@@ -59,6 +59,10 @@ FILE *readFile() {
 		}
 	}
 	return fp;
+}
+
+int cmp(const void*a, const void*b) {
+	return (*(int*)a - *(int*)b);
 }
 
 void numericalStatistics(FILE *fp) {
@@ -158,5 +162,16 @@ void numericalStatistics(FILE *fp) {
 		}
 	}
 	printf("Interval elem count: %d, Interval sum: %d\n", count, sum);
+	printf("\nUnsorted\n");
+	for (int i = 0; i < mempos; i++)
+	{
+		printf("%d ", numbers[i]);
+	}
+	qsort((void*) numbers, mempos+1, sizeof(int), cmp);
+	printf("\nSorted\n");
+	for (int i = 0; i < mempos; i++)
+	{
+		printf("%d ", numbers[i]);
+	}
 	free(numbers);
 }
