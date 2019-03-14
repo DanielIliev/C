@@ -219,18 +219,5 @@ void numericalStatistics(FILE *fp) {
 	fclose(interval);
 	printf("Max: %d, Min: %d\n", max, min);
 	printf("Avg: %d\n", sum/mempos+1);
-	/*for (int i = 0; i < mempos; i++)
-	{
-		if (numbers[i] >= begin && numbers[i] <= end)
-		{
-			if (step>=columns)
-			{
-				fprintf(interval, "%s\n", number);
-				step = 1;
-			}
-			fprintf(interval, "%s ", number);
-			step++;
-		} else continue;
-	}*/
 	free(numbers);
 }
