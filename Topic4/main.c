@@ -7,18 +7,13 @@ struct word {
 	int count; // Frequency in the file
 };
 
-/*int buffer = 50;
-void generateDictionary();
-
-void generateDictionary() {
-	struct word *words;
-	words = (word *words) malloc(words, buffer*sizeof(struct word));
-}*/
-
 int main() {
 	FILE *fp;
 	char user_file[255];
-	int opened = 0;
+	int opened = 0, buffer = 50;
+	struct word *words;
+	words = (void*) malloc(buffer * sizeof(words));
+	printf("%d", sizeof(words));
 	while(opened==0) {
 		printf("Input the file name (as seen on screen):");
 		scanf("%255s", user_file);
@@ -40,4 +35,19 @@ int main() {
 		printf("File closed... exiting");
 	}
 	return 0;
+}
+
+void readData(FILE *fp) {
+    char c;
+    char word_separators[] = {'.', ',', '?', '!', ':', ';', '/', ' '};
+    while((c=fgetc(fp)) != EOF) {
+        for(int i = 0; i < 8; i++) {
+            if(word_separators[i]==c) {
+                c = fgetc(fp);
+                break;
+            }
+        }
+        fputc(c, words);
+    }
+    rewind(fp);
 }
