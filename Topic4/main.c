@@ -2,12 +2,10 @@
 #include <stdlib.h>
 #include <conio.h>
 
-FILE* checkFile(const char* filename, const char* mode);
 FILE* selectFile();
-void generateDictionary(FILE *fp, int mempos, int buffer);
 void generateMenu();
 int userChoice();
-void createDictionary();
+void createDictionary(FILE *fp);
 void printDictionary();
 void wordSearch();
 void sortDictionary();
@@ -15,37 +13,37 @@ void exportDictionary();
 void importDictionary();
 void encodeDictionary();
 void decodeDictionary();
+FILE* checkFile(const char* filename, const char* mode);
+//void init_struct(struct initial);
 
-struct word {
-	int position; // Position in the dictionary
-	char content[30]; // The word
-	int count; // Frequency in the file
-};
-
-/*buffer = 50;
-struct word *words;
-words = (void*) malloc(buffer * sizeof(words));
-if (fclose(fp) == 0)
-{
-	printf("\nFile closed... exiting\n");
-}*/
+typedef struct {
+	int id; // ID in the dictionary
+	char *content; // The word
+	int count;
+} word;
 
 int main() {
 	FILE* fp = NULL;
+	int choice;
+	struct word *words;
+	words->id = 0;
+	words->content = "0";
+	words->count = 0;
+	repeat:
+	choice = userChoice();
 	do
 	{
-		switch(userChoice()) {
+		switch(choice) {
 			case 1:
 				fp=selectFile();
 			break;
 			case 2:
-				/*if (fp==NULL)
+				if (fp==NULL)
 				{
 					printf("Please select a file first!");
 				} else {
-
-				}*/
-				createDictionary();
+					createDictionary(fp);
+				}
 			break;
 			case 3:
 				printDictionary();
@@ -68,9 +66,15 @@ int main() {
 			case 9:
 				decodeDictionary();
 			break;
+			case 10:
+				return -1;
+			break;
+			default:
+				goto repeat;
 		}
-		printf("\nPress ENTER to continue...");
-		_getch();
+		printf("\nPress any key to continue...");
+		getch();
+		goto repeat;
 	} while (userChoice()!=10);
 	return 0;
 }
@@ -117,8 +121,45 @@ FILE* selectFile() {
 	return fp;
 }
 
-void createDictionary() {
-	printf("createDictionary");
+void createDictionary(FILE *fp) {
+	rewind(fp);
+	int c;
+    char word_stack[20];
+    int word_stack_iterator = 0, mempos = 0, buffer = 50;
+    struct word *words;
+    words = (struct word*) malloc(buffer * sizeof(struct word));
+    char word_separators[] = {'.', ',', '?', '!', ':', ';', '/', ' '};
+    FILE *dict;
+    char *filename;
+    printf("Input dictionary filename:");
+    scanf("%s", filename);
+    dict = fopen(filename, "w");
+    fprintf(dict, "Dictionary created from: %s\n", filename);
+    while((c=fgetc(fp)) != EOF) {
+        for(int i = 0; i < 8; i++) {
+            /*if(word_separators[i]==c) {
+            	words[mempos]->id = mempos;
+                words[mempos]->content = word_stack;
+                words[mempos]->count += 1;
+                for (int i = 0; i < 20; i++)
+                {
+                	word_stack[i] = ' ';
+                }
+                mempos++;
+                word_stack_iterator = 0;
+                break;
+            }*/
+            if (word_separators[i] == (char)c)
+            {
+            	fputc('\n', dict);
+            	c = fgetc(fp);
+            }
+        }
+        fputc(c, dict);
+        //word_stack[word_stack_iterator] = (char) c;
+    }
+    free(filename);
+    fclose(dict);
 }
 
 void printDictionary() {
@@ -155,19 +196,9 @@ FILE* checkFile(const char* filename, const char* mode) {
 	fp = fopen(filename, mode);
 	return fp;
 }
-/*
-void generateDictionary(FILE *fp) {
-    char c;
-    char word_stack[20];
-    char word_separators[] = {'.', ',', '?', '!', ':', ';', '/', ' '};
-    while((c=fgetc(fp)) != EOF) {
-        for(int i = 0; i < 8; i++) {
-            if(word_separators[i]==c) {
-                c = fgetc(fp);
-                break;
-            }
-        }
-        fputc(c, words);
-    }
-    rewind(fp);
-}*/
+void init_struct(struct initial) {
+	struct initial *words;
+	words->id = 0;
+	words->content = "0";
+	words->count = 0;
+}
