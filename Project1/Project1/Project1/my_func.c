@@ -43,7 +43,11 @@ void tableData(FILE *fp) {
 		symbols[i].pos = i;
 		symbols[i].count = 0;
 	}
-	while ((c = fgetc(fp)) != EOF) {
+	for (i = 0; i <= 255; i++)
+	{
+		printf("%c\n", symbols[i].symb);
+	}
+	/*while ((c = fgetc(fp)) != EOF) {
 		for (i = 0; i <= 255; i++)
 		{
 			if (symbols[i].symb == c)
@@ -59,7 +63,7 @@ void tableData(FILE *fp) {
 		{
 			printf("%c\t%d\t%x\t%d\n", symbols[i].symb, symbols[i].pos, symbols[i].pos, symbols[i].count);
 		}
-	}
+	}*/
 }
 void frequency(FILE *fp) {
 	rewind(fp);
@@ -81,38 +85,24 @@ void frequency(FILE *fp) {
 void changeCharacter(FILE *fp) {
 	rewind(fp);
 	int pos = 0, buffer = 100;
-	char c, swap1, swap2;
-	char *newdata;
-	newdata = (char *)calloc(buffer, sizeof(char));
-	if (newdata == NULL)
-	{
-		printf("Грешка при заделяне на допълнителна памет");
-	}
+	char swap1, swap2;
+	int c;
 	printf("Замени символът:");
 	scanf(" %c", &swap1);
 	printf("Със:");
 	scanf(" %c", &swap2);
-	while ((c = fgetc(fp)) != EOF) {
-		if (pos == buffer)
-		{
-			buffer += 50;
-			newdata = (void*)realloc(newdata, buffer*sizeof(char));
-		}
-		newdata[pos] = c;
-		pos++;
-	}
-	for (int i = 0; i < pos; i++)
-	{
-		if (newdata[i] == swap1)
-		{
-			newdata[i] = swap2;
-		}
-	}
 	FILE *fp1;
 	fp1 = fopen("output.txt", "w");
-	fprintf(fp1, "%s", newdata);
+	while ((c = fgetc(fp)) != EOF) {
+		if (c==swap1)
+		{
+			fputc((int)swap1, fp1);
+		}
+		else {
+			fputc(c, fp1);
+		}
+	}
 	fclose(fp1);
-	free(newdata);
 }
 
 void numericalStatistics(FILE *fp) {
