@@ -1,0 +1,12 @@
+# depslib dependency file v1.0
+1554715814 source:c:\users\didiencho\documents\github\test1\main.c
+	<stdio.h>
+	<stdlib.h>
+	"dict.h"
+
+1554715029 source:c:\users\didiencho\documents\github\test1\dict.c
+	"dict.h"
+
+1554715910 c:\users\didiencho\documents\github\test1\dict.h
+	<stdio.h>
+
