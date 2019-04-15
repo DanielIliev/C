@@ -1,8 +1,11 @@
 #include "dict.h"
 
-void sayhello() {
-    printf("Hello World!");
-}
+typedef struct {
+    int id;
+    char content[25];
+    int count;
+}word;
+word words[500];
 
 void generateMenu() {
 	printf("\nPROGRAM DICTIONARY\n");
@@ -19,13 +22,20 @@ void generateMenu() {
 }
 
 int userChoice() {
-	int choice = 0;
+	char input[30];
+	int choice;
 	do
 	{
+	    badInput:
 		system("cls");
 		generateMenu();
 		printf("Select your choice:");
-		scanf("%d", &choice);
+		scanf("%30s", input);
+		if(atoi(input) == 0) {
+            goto badInput;
+		} else {
+            choice = atoi(input);
+		}
 	} while (choice < 1 || choice > 10);
 	return choice;
 }
@@ -37,7 +47,7 @@ FILE* selectFile() {
 	{
 		printf("Input the file name (including the extension):");
 		scanf("%255s", name);
-		fp = checkFile(name, "r");
+		fp = fopen(name, "r");
 		if (fp == NULL)
 		{
 			printf("\nFailed to open file\n");
@@ -47,19 +57,28 @@ FILE* selectFile() {
 }
 
 void createDictionary(FILE *fp) {
-	rewind(fp);
-	int c;
+    char c;
+	FILE *fp2 = fopen("temp.txt", "w");
+	while((c=fgetc(fp)) != EOF) {
+        if(c==':' || c==';' || c=='?' || c=='!' || c=='/' || c=='\n' || c==' ' || c==EOF) {
+            fputc('\n', fp2);
+        } else {
+            fputc(c, fp2);
+        }
+	}
+	fclose(fp);
+	fclose(fp2);
 }
 
 void printDictionary() {
-	/*printf("printDictionary");
-	for (int i = 0; i < 5000; i++)
-	{
-		if (words[i].word)
-		{
-			printf("ID: %d, WORD: %s, COUNT: %d", words[i].id, words[i].word, words[i].count);
-		}
-	}*/
+    if(!words) {
+        printf("Please create a dictionary first!");
+    } else {
+        /*for (int i = 0; i < 5; i++) {
+            printf("%d %s %d\n", words[i].id, words[i].content, words[i].count);
+        }*/
+        printf("%d %s %d", words[0].id, words[0].content, words[0].count);
+	}
 }
 
 void wordSearch() {
@@ -84,11 +103,4 @@ void encodeDictionary() {
 
 void decodeDictionary() {
 	printf("decodeDictionary");
-}
-
-// Suplementary functions
-FILE* checkFile(const char* filename, const char* mode) {
-	FILE *fp = NULL;
-	fp = fopen(filename, mode);
-	return fp;
 }

@@ -1,9 +1,13 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "dict.h"
 
 int main()
 {
+    /*word *words;
+	words = (word*) malloc (50*sizeof(word));
+	words[0].id = 0;
+	strcpy(words[0].content,"Tosho");
+	words[0].count = 1;
+	printf("%d %s %d", words[0].id, words[0].content, words[0].count);*/
     FILE* fp = NULL;
 	int choice;
 	repeat:
@@ -44,10 +48,11 @@ int main()
 				decodeDictionary();
 			break;
 			case 10:
-				return -1;
+			    printf("Closing program...");
+				exit(0);
 			break;
 			default:
-				goto repeat;
+				exit(0);
 		}
 		printf("\nPress any key to continue...");
 		getch();

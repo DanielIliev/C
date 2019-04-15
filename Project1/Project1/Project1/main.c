@@ -6,8 +6,9 @@
 #include "menu.h"
 
 int main() {
-	setlocale(LC_ALL, "bulgarian");
-	menu();
+	system("chcp 65001");
+	printf("Тошко");
+	//menu();
 	_getch();
 	return 0;
 }
