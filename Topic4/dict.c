@@ -56,29 +56,54 @@ FILE* selectFile() {
 	return fp;
 }
 
+int checkSeparator(char c) {
+    int check = 0;
+    switch(c) {
+        case '?':
+            check = -1;
+        break;
+        case '\n':
+            check = -2;
+        break;
+        case ';':
+            check = -3;
+        break;
+        case ':':
+            check = -4;
+        break;
+        case ',':
+            check = -5;
+        break;
+        case '.':
+            check = -6;
+        break;
+        case '!':
+            check = -7;
+        break;
+        case '/':
+            check = -8;
+        break;
+        case EOF:
+            check = -9;
+        break;
+        case ' ':
+            check = -10;
+        break;
+    }
+    return check;
+}
+
 void createDictionary(FILE *fp) {
-    char c;
-	FILE *fp2 = fopen("temp.txt", "w");
-	while((c=fgetc(fp)) != EOF) {
-        if(c==':' || c==';' || c=='?' || c=='!' || c=='/' || c=='\n' || c==' ' || c==EOF) {
-            fputc('\n', fp2);
-        } else {
-            fputc(c, fp2);
+    int c;
+    do {
+        c = fgetc(fp);
+        if(checkSeparator(c) == 0) {
+            printf("%c", c);
         }
-	}
-	fclose(fp);
-	fclose(fp2);
+    } while(c!=EOF);
 }
 
 void printDictionary() {
-    if(!words) {
-        printf("Please create a dictionary first!");
-    } else {
-        /*for (int i = 0; i < 5; i++) {
-            printf("%d %s %d\n", words[i].id, words[i].content, words[i].count);
-        }*/
-        printf("%d %s %d", words[0].id, words[0].content, words[0].count);
-	}
 }
 
 void wordSearch() {
