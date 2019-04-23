@@ -8,7 +8,6 @@ int user_choice();
 void generate_menu();
 
 int main(void) {
-	route *head = NULL;
 	int choice;
 	repeat:
 	choice = user_choice();
@@ -16,16 +15,16 @@ int main(void) {
 	{
 		switch (choice) {
 			case 1:
-				head = create_route();
+				create_route();
 				break;
 			case 2:
-				modify_route(head);
+				modify_route();
 				break;
 			case 3:
-				fetch_routes_by_country(head);
+				fetch_routes_by_country();
 				break;
 			case 4:
-				fetch_routes_by_season(head);
+				fetch_routes_by_season();
 				break;
 			case 5:
 				exit(0);
